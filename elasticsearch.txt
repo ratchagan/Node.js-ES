@@ -1,0 +1,19 @@
+curl -X GET http://127.0.0.1:9200/
+
+curl 'localhost:9200/_cat/indices?v'
+
+curl -XPUT 'localhost:9200/flow-records-table?pretty' 
+
+ curl -XPUT 'localhost:9200/flow-records-table/external/1?pretty' -d '
+ {
+ 	"Source IP":"10.0.0.1",
+ 	"destination IP":"10.0.0.2",
+ 	"source port":"eth0",
+ 	"destination port":"eth1" ,
+ 	"protocol":"ipv4" 
+
+ }'
+
+curl -XGET 'localhost:9200/flow-records-table/external/1?pretty'
+
+curl -XDELETE 'localhost:9200/flow-records-table/external/2?pretty'
