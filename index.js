@@ -30,11 +30,9 @@ client.indices.get({index:'flow-index'},function(err,resp,status){
                 console.log(err);}
             else{
                 console.log("create",resp)}
-        });
-    }
+        });}
     else{
-            console.log("get",resp);
-        }
+        console.log("get",resp);}
 });
 
 
@@ -135,19 +133,77 @@ app.post('/create',function(req,res){
         });
 });
 
-
-//delete a document based on the document id
-app.delete('/delete/',function(req,res){
-    client.delete(req.body,function(err,resp,status){
-        if(err){
-            console.log(err);
-        }else{
-            res.send(resp);
-            console.log("Deleted a flow successfully");
+//delete a document based on src-ip/des-ip/ src-des-ip
+app.delete('/delete/:ip',function(req,res) {
+        if (req.params.ip == "source") {
+            var srcip = req.body.sourceIP;
+            client.delete({
+                index: 'flow-index',
+                type: 'document',
+                id: '_query',
+                body: {
+                    query: {
+                        match: {
+                            sourceIP: srcip
+                        }
+                    }
+                }
+            }, function (err, resp, status) {
+                if (err) {
+                    console.log(err);
+                } else {
+                    console.log("GET", resp);
+                    res.send(resp);
+                }
+            });
         }
-    });
-});
-
-
-
-
+        else if (req.params.ip == "destination") {
+            var desip = req.body.destinationIP;
+            client.search({
+                index: 'flow-index',
+                type: 'document',
+                id: '_query',
+                body: {
+                    query: {
+                        match: {
+                            sourceIP: desip
+                        }
+                    }
+                }
+            }, function (err, resp, status) {
+                if (err) {
+                    console.log(err);
+                } else {
+                    console.log("GET", resp);
+                    res.send(resp);
+                }
+            });
+        }
+        else {
+            var srcip = req.body.sourceIP;
+            var desip = req.body.destinationIP;
+            client.search({
+                index: 'flow-index',
+                type: 'document',
+                id: '_query',
+                body: {
+                    query: {
+                        match: {
+                            sourceIP: srcip
+                        },
+                        match:{
+                            destinationIP: desip
+                        }
+                    }
+                }
+            }, function (err, resp, status) {
+                if (err) {
+                    console.log(err);
+                } else {
+                    console.log("GET", resp);
+                    res.send(resp);
+                }
+            });
+        }
+    }
+);
