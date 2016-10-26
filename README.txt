@@ -30,5 +30,19 @@ To retrive flows with respect to sourceip & destinationip
  {"sourceIP":"10.0.0.1",
  "destinationIP": "10.0.0.2"}
 
-STEP 3: DELETE
- //TO DO
+STEP 3: Use DELETE method in REST Client with the following url
+
+To retrive flows with respect to sourceip
+ DELETE : http://127.0.0.1:8080/delete/source
+ {"sourceIP":"10.0.0.1"}
+
+
+To retrive flows with respect to destinationip
+ DELETE : http://127.0.0.1:8080/delete/destination
+ {"destinationIP":"10.0.0.1"}
+
+
+To retrive flows with respect to sourceip & destinationip
+ DELETE : http://127.0.0.1:8080/delete/srcdes
+ {"sourceIP":"10.0.0.1",
+ "destinationIP": "10.0.0.2"}
