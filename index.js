@@ -35,15 +35,6 @@ client.indices.get({index:'flow-index'},function(err,resp,status){
         console.log("get",resp);}
 });
 
-
-// POST : http://127.0.0.1:8080/get/source
-// {"sourceIP":"10.0.0.1"}
-// POST : http://127.0.0.1:8080/get/destination
-// {"destinationIP":"10.0.0.1"}
-// POST : http://127.0.0.1:8080/get/srcdes
-// {"sourceIP":"10.0.0.1",
-//  "destinationIP": "10.0.0.2"}
-
 app.post('/get/:ip',function(req,res) {
         if (req.params.ip == "source") {
             var srcip = req.body.sourceIP;
