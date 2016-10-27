@@ -46,21 +46,6 @@ client.indices.get({index:'flow-index'},function(err,resp,status){
         console.log("get",resp);}
 });
 
-//index Mapping
-// client.indices.putMapping({
-//     index:'flow-index',
-//     type:'document',
-//     body:{
-//         properties:{
-//             sourceIP:{type:'ip'},
-//             destinationIP:{type:'ip'},
-//             sourceport:{type:'string'},
-//             detinationport:{type:'string'},
-//             protocol:{type:'string'}
-//         }
-//     }
-// });
-
 app.post('/get/:ip',function(req,res) {
         if (req.params.ip == "source") {
             var srcip = req.body.sourceIP;
