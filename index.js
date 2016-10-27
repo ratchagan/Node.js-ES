@@ -25,7 +25,18 @@ var client = elasticsearch.Client({
 client.indices.get({index:'flow-index'},function(err,resp,status){
     if(err){
         console.log(err);
-        client.indices.create({index:'flow-index'},function(err,resp,status){
+        client.indices.create({index:'flow-index',
+            type:'document',
+            body:{
+                properties:{
+                    sourceIP:{type:'ip'},
+                    destinationIP:{type:'ip'},
+                    sourceport:{type:'string'},
+                    detinationport:{type:'string'},
+                    protocol:{type:'string'}
+                }
+            }
+        },function(err,resp,status){
             if(err){
                 console.log(err);}
             else{
@@ -34,6 +45,21 @@ client.indices.get({index:'flow-index'},function(err,resp,status){
     else{
         console.log("get",resp);}
 });
+
+//index Mapping
+// client.indices.putMapping({
+//     index:'flow-index',
+//     type:'document',
+//     body:{
+//         properties:{
+//             sourceIP:{type:'ip'},
+//             destinationIP:{type:'ip'},
+//             sourceport:{type:'string'},
+//             detinationport:{type:'string'},
+//             protocol:{type:'string'}
+//         }
+//     }
+// });
 
 app.post('/get/:ip',function(req,res) {
         if (req.params.ip == "source") {
