@@ -7,6 +7,7 @@ var express = require('express');
 var bodyParser = require("body-parser");
 var app = express();
 var elasticsearch = require('./elasticsearch.js');
+var Q = require('q');
 
 //configuring express to use body-parser as a middle-ware
 app.use(bodyParser.urlencoded({extended: true}));
@@ -17,17 +18,17 @@ app.listen(3000,function () {
 });
 
 //create index
-elasticsearch.getIndex().then(function(exits){
+Q(elasticsearch.getIndex()).then(function(exits){
     if(exits){
         console.log("Index exits");
     }
-}).then(elasticsearch.createIndex());
+}).then(Q(elasticsearch.createIndex()));
 
 
 //insert flow-documents
 app.post('/create',function(req,res){
     var doc = req.body;
-    elasticsearch.addDocument(doc)
+    Q(elasticsearch.addDocument(doc))
         .then(function (data){
             res.send(data);
     }, function(err){
@@ -39,7 +40,7 @@ app.post('/create',function(req,res){
 app.post('/get/:ip',function(req,res,next) {
     if (req.params.ip == "source") {
         var srcip = req.body.sourceIP;
-        elasticsearch.searchSrcIP(srcip)
+        Q(elasticsearch.searchSrcIP(srcip))
             .then(function (data) {
                 res.send(data);
             }, function (err) {
@@ -48,7 +49,7 @@ app.post('/get/:ip',function(req,res,next) {
     }
     else if (req.params.ip == "destination") {
         var desip = req.body.destinationIP;
-        elasticsearch.searchDesIP(desip)
+        Q(elasticsearch.searchDesIP(desip))
             .then(function (data) {
                 res.send(data);
             }, function (err) {
@@ -58,7 +59,7 @@ app.post('/get/:ip',function(req,res,next) {
     else{
         var srcip = req.body.sourceIP;
         var desip = req.body.destinationIP;
-        elasticsearch.searchSrcDesIP(srcip,desip)
+        Q(elasticsearch.searchSrcDesIP(srcip,desip))
             .then(function(data){
                 res.send(data);
             },function(err){
@@ -72,7 +73,7 @@ app.post('/get/:ip',function(req,res,next) {
 app.delete('/delete/:ip',function(req,res) {
     if (req.params.ip == "source") {
         var srcip = req.body.sourceIP;
-        elasticsearch.deleteSrcIP(srcip)
+        Q(elasticsearch.deleteSrcIP(srcip))
             .then(function (data) {
                 res.send(data);
             }, function (err) {
@@ -81,7 +82,7 @@ app.delete('/delete/:ip',function(req,res) {
     }
     else if (req.params.ip == "destination") {
         var desip = req.body.destinationIP;
-        elasticsearch.deleteDesIP(desip)
+        Q(elasticsearch.deleteDesIP(desip))
             .then(function (data) {
                 res.send(data);
             }, function (err) {
@@ -91,7 +92,7 @@ app.delete('/delete/:ip',function(req,res) {
     else{
         var srcip = req.body.sourceIP;
         var desip = req.body.destinationIP;
-        elasticsearch.deleteSrcDesIP(srcip,desip)
+        Q(elasticsearch.deleteSrcDesIP(srcip,desip))
             .then(function(data){
                 res.send(data);
             },function(err){
