@@ -175,3 +175,13 @@ function deleteSrcDesIP(srcip,desip){
 }
 exports.deleteSrcDesIP = deleteSrcDesIP;
 
+//Perodic Job
+var schedule = require('node-schedule');
+taskSchedule = new schedule.RecurrenceRule();
+taskSchedule.second = 20;
+function reportOnSchdeule (){
+    client.indices.get({
+        index:'flow-index'
+    });
+}
+schedule.scheduleJob(taskSchedule, reportOnSchdeule);
